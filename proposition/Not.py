@@ -4,6 +4,7 @@ from proposition.Proposition import Proposition
 #   This class stands as a representation of an NOT logical operator
 
 class Not(Proposition):
+
     # Attributes
     #   Stores the unique term of the NOT operator
     term: Proposition

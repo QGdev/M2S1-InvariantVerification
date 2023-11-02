@@ -4,6 +4,7 @@ from proposition.Proposition import Proposition
 #   This class stands as a representation of a UNARY logical operator
 
 class Unary(Proposition):
+
     # Attributes
     #   Stores the token of the UNARY operator
     term: str

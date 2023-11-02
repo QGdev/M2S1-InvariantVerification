@@ -4,6 +4,7 @@ from proposition.Proposition import Proposition
 #   This class stands as a representation of an AND logical operator
 
 class And(Proposition):
+
     # Attributes
     #   Stores the two terms of the AND operator (left and right)
     term1: Proposition

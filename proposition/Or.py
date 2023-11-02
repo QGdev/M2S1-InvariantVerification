@@ -4,6 +4,7 @@ from proposition.Proposition import Proposition
 #   This class stands as a representation of an OR logical operator
 
 class Or(Proposition):
+
     # Attributes
     #   Stores the two terms of the Or operator (left and right)
     term1: Proposition

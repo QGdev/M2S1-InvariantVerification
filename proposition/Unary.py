@@ -1,6 +1,13 @@
 from proposition.Proposition import Proposition
 
 
+#   Devoir Maison n°1 - Modélisation et Vérification des Systèmes Concurrents
+#   Auteurs:
+#       -   Quentin GOMES DOS REIS
+#       -   Matthéo LÉCRIVAIN
+#   M2 ALMA - Nantes Université
+#   2023-2024
+
 #   This class stands as a representation of a UNARY logical operator
 
 class Unary(Proposition):

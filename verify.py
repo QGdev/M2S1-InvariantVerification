@@ -3,6 +3,13 @@ from transitionSystem.State import State
 from transitionSystem.TransitionSystem import TransitionSystem
 
 
+#   Devoir Maison n°1 - Modélisation et Vérification des Systèmes Concurrents
+#   Auteurs:
+#       -   Quentin GOMES DOS REIS
+#       -   Matthéo LÉCRIVAIN
+#   M2 ALMA - Nantes Université
+#   2023-2024
+
 #   This file contains the implementation of the algorithm given in the subject
 
 #   This procedure "visit" is based on the pseudocode given in the paper

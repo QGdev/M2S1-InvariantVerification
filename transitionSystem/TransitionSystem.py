@@ -1,11 +1,17 @@
 from transitionSystem.State import State
 
 
+#   Devoir Maison n°1 - Modélisation et Vérification des Systèmes Concurrents
+#   Auteurs:
+#       -   Quentin GOMES DOS REIS
+#       -   Matthéo LÉCRIVAIN
+#   M2 ALMA - Nantes Université
+#   2023-2024
+
 #   This file contains the TransitionSystem class which represents a transition system
 #   which will be used in order to implement assessment algorithm easily
 
 class TransitionSystem:
-
     # Attributes
     #   Stores the initial states of the transition system
     initial_states: list[State] = []

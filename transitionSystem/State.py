@@ -1,3 +1,9 @@
+#   Devoir Maison n°1 - Modélisation et Vérification des Systèmes Concurrents
+#   Auteurs:
+#       -   Quentin GOMES DOS REIS
+#       -   Matthéo LÉCRIVAIN
+#   M2 ALMA - Nantes Université
+#   2023-2024
 
 #   This file contains the State class which represents a state in a transition system
 #   which will be used in TransitionSystem.py

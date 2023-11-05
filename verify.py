@@ -15,10 +15,10 @@ from transitionSystem.TransitionSystem import TransitionSystem
 #   This procedure "visit" is based on the pseudocode given in the paper
 #   Note: In the paper, the procedure "visit" only have 1 parameter which is State s
 #           But in this implementation, for the sake of simplicity, we will use 5 parameters
-def visit(u: list[State], _r: set[State], _s: State, _b: bool, phi: Proposition) -> tuple[
+def visit(_u: list[State], _r: set[State], _s: State, _b: bool, phi: Proposition) -> tuple[
     list[State], set[State], bool]:
     # push(s, U)
-    u.insert(-1, _s)
+    _u.insert(-1, _s)
     # R <- R U {s}
     _r.add(_s)
 
@@ -26,12 +26,12 @@ def visit(u: list[State], _r: set[State], _s: State, _b: bool, phi: Proposition)
     # Emulate a do-while loop
     while True:
         # s <- top(U)
-        s_prime = u[-1]
+        s_prime = _u[-1]
         # If Post(s') strictly contains R then
         s_prime_next_states_set = set(s_prime.get_next_states())
-        if s_prime_next_states_set.issubset(_r) is False:
+        if s_prime_next_states_set.issubset(_r):
             # Pop(U)
-            u.pop()
+            _u.pop()
             # b <- b AND s' |= phi
             _b = _b and phi.eval(s_prime.get_labels())
         # Else
@@ -39,15 +39,15 @@ def visit(u: list[State], _r: set[State], _s: State, _b: bool, phi: Proposition)
             # Choose s'' in Post(s') \ R
             s_double_prime = s_prime_next_states_set.difference(_r).pop()
             # Push(s'', U)
-            u.insert(-1, s_double_prime)
+            _u.insert(-1, s_double_prime)
             # R <- R U {s''}
             _r.add(s_double_prime)
         # if U is empty then
-        if len(u) == 0:
+        if len(_u) == 0 or _b:
             # break
             break
 
-    return u, _r, _b
+    return _u, _r, _b
 
 
 #   This procedure "verify" is based on the pseudocode given in the paper
@@ -60,9 +60,8 @@ def verify(transition_system: TransitionSystem, proposition: Proposition) -> tup
     b: bool = True
 
     i = set(transition_system.get_initial_states())
-
     # while I \ R is not empty AND b is True do
-    while i.difference(r) and b:
+    while len(i.difference(r)) > 0 and b:
         # Choose s in I \ R
         s = i.difference(r).pop()
         # U, R, b <- visit(U, R, s, b, phi)

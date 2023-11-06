@@ -38,7 +38,4 @@ class State:
     # Get the string representation of the state
     #  Which is just the labels of the state and the labels of the next states
     def __str__(self) -> str:
-        result = f"State: {self.get_labels()}\n"
-        result += "Next states:\n"
-        for state in self.get_next_states():
-            result += f"\t{state.get_labels()}\n"
+        return f"State: {self.get_labels()}"

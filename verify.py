@@ -15,19 +15,18 @@ from transitionSystem.TransitionSystem import TransitionSystem
 #   This procedure "visit" is based on the pseudocode given in the paper
 #   Note: In the paper, the procedure "visit" only have 1 parameter which is State s
 #           But in this implementation, for the sake of simplicity, we will use 5 parameters
-def visit(_u: list[State], _r: set[State], _s: State, _b: bool, phi: Proposition) -> tuple[
-    list[State], set[State], bool]:
+def visit(_u: list[State], _r: set[State], _s: State, _b: bool, phi: Proposition) -> tuple[list[State], set[State], bool]:
+
     # push(s, U)
-    _u.insert(-1, _s)
+    _u.insert(len(_u), _s)
     # R <- R U {s}
     _r.add(_s)
 
-    # while U is not empty do
-    # Emulate a do-while loop
-    while True:
+    # while U is not empty and b is True do
+    while len(_u) > 0 and _b:
         # s <- top(U)
         s_prime = _u[-1]
-        # If Post(s') strictly contains R then
+        # If R strictly contains Post(s') then
         s_prime_next_states_set = set(s_prime.get_next_states())
         if s_prime_next_states_set.issubset(_r):
             # Pop(U)
@@ -39,13 +38,9 @@ def visit(_u: list[State], _r: set[State], _s: State, _b: bool, phi: Proposition
             # Choose s'' in Post(s') \ R
             s_double_prime = s_prime_next_states_set.difference(_r).pop()
             # Push(s'', U)
-            _u.insert(-1, s_double_prime)
+            _u.insert(len(_u), s_double_prime)
             # R <- R U {s''}
             _r.add(s_double_prime)
-        # if U is empty then
-        if len(_u) == 0 or _b:
-            # break
-            break
 
     return _u, _r, _b
 

@@ -26,12 +26,7 @@ class Unary(Proposition):
     def eval(self, labels: list[str]) -> bool:
         #   Compare the provided labels with the stored term
         #   If the term is in the labels, return True
-        for label in labels:
-            if label == self.term:
-                return True
-
-        #   If not, return False
-        return False
+        return self.term in labels
 
     # Get the string representation of the proposition
     def __str__(self) -> str:

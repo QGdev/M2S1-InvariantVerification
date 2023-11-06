@@ -19,12 +19,15 @@ from verify import verify
 
 def proposition_print_test(transition_system: TransitionSystem, proposition: Proposition):
     print(f"\t{proposition}")
-    is_verified, _ = verify(transition_system, proposition)
+    is_verified, example = verify(transition_system, proposition)
 
     if is_verified:
         print("\n\t\033[92m\033[1mThe proposition is verified\033[0m")
     else:
         print("\n\t\033[93m\033[1mThe proposition is not verified\033[0m")
+        print("\t\033[91m\033[1mCounter-example:\033[0m")
+        for state in example:
+            print(f"\t\t\033[91m\033[1m{state}\033[0m")
 
 
 def proposition_test():
@@ -61,6 +64,9 @@ def verify_semaphores():
     print("==================================================\033[0m")
 
     #   States
+    #      i for idle
+    #      w for waiting
+    #      cs for critical section
     s1 = State(["i1", "i2", "y=1"])
     s2 = State(["w1", "i2", "y=1"])
     s3 = State(["cs1", "i2", "y=0"])
@@ -92,11 +98,12 @@ def verify_semaphores():
 
     proposition_print_test(transition_system, proposition1)
 
-    #   Proposition 2: The critical
+    #   Proposition 2: Test of a proposition that is false, the fact that both processes can access the critical section at the same time
     print("\n\033[4m\033[1mSecond proposition:\033[0m")
-    print("\tBoth processes can be waiting to access the critical section at the same time")
+    print("\tBoth processes can access the critical section at the same time")
+    print("\t\033[94m\033[1mNOTE: This proposition is false, we will test it to see if the algorithm works\033[0m")
 
-    proposition2 = And(Unary("w1"), Unary("w2"))
+    proposition2 = And(Unary("cs1"), Unary("cs2"))
 
     proposition_print_test(transition_system, proposition2)
 
@@ -154,15 +161,6 @@ def verify_traffic_lights_at_crossroad_section():
 
     proposition_print_test(transition_system, proposition)
 
-    #   Fourth proposition: The traffic lights can be both red at the same time
-    proposition = And(Unary("r1"), Unary("r2"))
-
-    print("\n\033[4m\033[1mFourth proposition:\033[0m")
-    print("\tThe traffic lights can be both red at the same time")
-
-    proposition_print_test(transition_system, proposition)
-
-
 #    Verify a system of transitions that models a drinks vending machine.
 #    The drinks vending machine can be in one of the following states:
 #    -   idle
@@ -197,15 +195,15 @@ def verify_drinks_vending_machine():
 
     # States
 
-    s1 = State(["idle"])
-    s2 = State(["coin inserted"])
-    s3 = State(["coin returned"])
+    s1 = State(["idle", "no drink selected", "no drink delivered"])
+    s2 = State(["coin inserted", "no drink selected", "no drink delivered"])
+    s3 = State(["coin returned", "no drink selected", "no drink delivered"])
 
     #   Selecting a drink
-    s4_tea = State(["coin inserted", "tea selected"])
-    s4_coffee = State(["coin inserted", "coffee selected"])
-    s4_hot_chocolate = State(["coin inserted", "hot chocolate selected"])
-    s4_tomato_soup = State(["coin inserted", "tomato soup selected"])
+    s4_tea = State(["coin inserted", "tea selected", "no drink delivered"])
+    s4_coffee = State(["coin inserted", "coffee selected", "no drink delivered"])
+    s4_hot_chocolate = State(["coin inserted", "hot chocolate selected", "no drink delivered"])
+    s4_tomato_soup = State(["coin inserted", "tomato soup selected", "no drink delivered"])
 
     #   Serving a drink
     s5_tea = State(["coin inserted", "tea_selected", "tea delivered"])
@@ -233,49 +231,39 @@ def verify_drinks_vending_machine():
 
     #  Propositions
 
-    # First proposition: The drinks vending machine cannot deliver a drink if no coin has been inserted
-    proposition1 = And(Not(Unary("coin inserted")),
-                       Or(Unary("tea delivered"),
-                          Or(Unary("coffee delivered"),
-                             Or(Unary("hot chocolate delivered"),
-                                Unary("tomato soup delivered")))))
+    # First proposition: The drinks vending machine cannot deliver a drink if no coin has been inserted even if a
+    # drink has been selected
+    proposition1 = Not(And(Or(Unary("idle"),
+                              Unary("coin returned")),
+                           And(Unary("no drink selected"),
+                               Or(Unary("tea delivered"),
+                                  Or(Unary("coffee delivered"),
+                                     Or(Unary("hot chocolate delivered"),
+                                        Unary("tomato soup delivered")))))))
 
     print("\n\033[4m\033[1mFirst proposition:\033[0m")
-    print("\tThe drinks vending machine cannot deliver a drink if no coin has been inserted")
+    print("\tThe drinks vending machine cannot deliver a drink if no coin has been inserted even if a drink has been selected")
+
     proposition_print_test(transition_system, proposition1)
 
-    # Second proposition: The drinks vending machine cannot deliver a drink if no drink has been selected
-    proposition2 = Not(
-        And(Or(Unary("tea selected"),
-               Or(Unary("coffee selected"),
-                  Or(Unary("hot chocolate selected"),
-                     Unary("tomato soup selected")))),
-            Or(Unary("tea delivered"),
-               Or(Unary("coffee delivered"),
-                  Or(Unary("hot chocolate delivered"),
-                     Unary("tomato soup delivered"))))))
+    # Second proposition: The drinks vending machine cannot deliver a drink or let select a drink if no coin has been
+    # inserted.
+    proposition2 = Not(And(Or(Unary("idle"),
+                              Unary("coin returned")),
+                           Or(Or(Unary("tea selected"),
+                                 Or(Unary("coffee selected"),
+                                    Or(Unary("hot chocolate selected"),
+                                       Unary("tomato soup selected")))),
+                              Or(Unary("tea delivered"),
+                                 Or(Unary("coffee delivered"),
+                                    Or(Unary("hot chocolate delivered"),
+                                       Unary("tomato soup delivered")))))))
 
     print("\n\033[4m\033[1mSecond proposition:\033[0m")
-    print("\tThe drinks vending machine cannot deliver a drink if no drink has been selected")
+    print("\tThe drinks vending machine cannot deliver a drink or let select a drink if no coin has been inserted")
     proposition_print_test(transition_system, proposition2)
 
-    # Third proposition: The drinks vending machine cannot deliver a drink if no coin has been inserted and no drink
-    # has been selected
-    proposition3 = And(Not(Unary("coin inserted")),
-                       And(Or(Unary("tea selected"),
-                              Or(Unary("coffee selected"),
-                                 Or(Unary("hot chocolate selected"),
-                                    Unary("tomato soup selected")))),
-                           Or(Unary("tea delivered"),
-                              Or(Unary("coffee delivered"),
-                                 Or(Unary("hot chocolate delivered"),
-                                    Unary("tomato soup delivered"))))))
-
-    print("\n\033[4m\033[1mThird proposition:\033[0m")
-    print("\tThe drinks vending machine cannot deliver a drink if no coin has been inserted and no drink has been selected")
-    proposition_print_test(transition_system, proposition3)
-
-    # Fourth proposition: The drinks vending machine must deliver the selected drink if a coin has been inserted and
+    # Third proposition: The drinks vending machine must deliver the selected drink if a coin has been inserted and
     # a drink has been selected Must check if the selected drink is the same as the delivered drink (don't serve a
     # tea if a coffee has been selected)
     #   The proposition is too complex to be written, we will decompose it like this:
@@ -285,7 +273,7 @@ def verify_drinks_vending_machine():
     #       a hot chocolate
     #   -   If a coin has been inserted and a tomato soup has been selected, the drinks vending machine must deliver
     #       a tomato soup
-    print("\n\033[4m\033[1mFourth proposition:\033[0m")
+    print("\n\033[4m\033[1mThird proposition:\033[0m")
     print("\tThe drinks vending machine must deliver the selected drink if a coin has been inserted and a drink has been selected")
     print("\tMust check if the selected drink is the same as the delivered drink (don't serve a tea if a coffee has been selected")
 
@@ -297,6 +285,8 @@ def verify_drinks_vending_machine():
     print("\n\tEach proposition will be tested separately")
 
     options = ["tea", "coffee", "hot chocolate", "tomato soup"]
+    proposition_tmp: Proposition
+    final_proposition: Proposition
 
     #   For each option, we will create a proposition that must be true if the drinks vending machine must deliver
     for option in options:
@@ -311,10 +301,10 @@ def verify_drinks_vending_machine():
                                  Unary(f"{other_option} delivered"))
 
         #   Now we build or final proposition
-        final_proposition = And(Unary("coin inserted"),
+        final_proposition = Not(And(Unary("coin inserted"),
                                 And(Unary(f"{option} selected"),
-                                    And(Unary(f"{option} delivered"),
-                                        Not(proposition_tmp))))
+                                    proposition_tmp)))
+
 
         print(f"\n\t\033[4m\033[1m- {option}:\033[0m")
         print(f"\tSelected: {option}, Delivered: {option}")

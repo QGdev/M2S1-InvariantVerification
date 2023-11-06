@@ -153,11 +153,11 @@ def verify_traffic_lights_at_crossroad_section():
 
     proposition_print_test(transition_system, proposition)
 
-    #   Third proposition: The traffic lights cannot be both green or yellow at the same time
+    #   Third proposition: The traffic lights cannot be both green and yellow at the same time
     proposition = Not(Or(And(Unary("g1"), Unary("y2")), And(Unary("y1"), Unary("g2"))))
 
     print("\n\033[4m\033[1mThird proposition:\033[0m")
-    print("\tThe traffic lights cannot be both green or yellow at the same time")
+    print("\tThe traffic lights cannot be both green and yellow at the same time")
 
     proposition_print_test(transition_system, proposition)
 

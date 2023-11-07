@@ -9,6 +9,8 @@ from transitionSystem.State import State
 from transitionSystem.TransitionSystem import TransitionSystem
 from verify import verify
 
+import sys
+
 
 #   Devoir Maison n°1 - Modélisation et Vérification des Systèmes Concurrents
 #   Auteurs:
@@ -312,6 +314,13 @@ def verify_drinks_vending_machine():
 
 
 if __name__ == '__main__':
+
+    # Need to check that Python version is >= 3.11
+    # If not, print a warning message
+    if sys.version_info < (3, 11):
+        print("\033[93m\033[1mWARNING: You are using a version of Python that is older than 3.11, the program may not work as expected !\033[0m")
+
+    # Print the header
     print("\033[1m==================================================")
     print("Devoir Maison n°1 - Modélisation et Vérification des Systèmes Concurrents")
     print("Auteurs:")
@@ -322,6 +331,10 @@ if __name__ == '__main__':
     print("==================================================\033[0m")
 
     # proposition_test()
+
+    #   Run the subject example for the semaphores
     verify_semaphores()
+    #   Run the traffic lights at a crossroad example
     verify_traffic_lights_at_crossroad_section()
+    #   Run the drinks vending machine example
     verify_drinks_vending_machine()

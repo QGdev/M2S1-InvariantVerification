@@ -233,7 +233,7 @@ def verify_drinks_vending_machine():
 
     #  Propositions
 
-    # First proposition: The drinks vending machine cannot deliver a drink if no coin has been inserted even if a
+    # First proposition: The drinks vending machine cannot deliver a drink if no coin has been inserted and if no a
     # drink has been selected
     proposition1 = Not(And(Or(Unary("idle"),
                               Unary("coin returned")),
@@ -244,7 +244,7 @@ def verify_drinks_vending_machine():
                                         Unary("tomato soup delivered")))))))
 
     print("\n\033[4m\033[1mFirst proposition:\033[0m")
-    print("\tThe drinks vending machine cannot deliver a drink if no coin has been inserted even if a drink has been selected")
+    print("\tThe drinks vending machine cannot deliver a drink if no coin has been inserted and if no a drink has been selected")
 
     proposition_print_test(transition_system, proposition1)
 
